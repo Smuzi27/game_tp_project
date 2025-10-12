@@ -148,6 +148,16 @@ def draw_victory_screen(player):
     if player.victory_sound:
         player.victory_sound.play()
 
+def draw_game_over():
+    screen.fill((255, 200, 200))
+    text = FONT.render("ПОРАЖЕНИЕ!", True, (100, 0, 0))
+    msg = FONT.render("Маршрутка не доехала до Вышки...", True, (0, 0, 0))
+    screen.blit(text, (WIDTH // 2 - 100, 200))
+    screen.blit(msg, (WIDTH // 2 - 220, 260))
+    screen.blit(FONT.render("Нажмите Enter, чтобы попробовать снова", True, (0, 0, 0)), (WIDTH // 2 - 320, 350))
+    pygame.display.flip()
+
+
 level = Level(screen, WIDTH, HEIGHT)
 if __name__ == "__main__":
     main()
