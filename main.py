@@ -157,6 +157,16 @@ def draw_game_over():
     screen.blit(FONT.render("Нажмите Enter, чтобы попробовать снова", True, (0, 0, 0)), (WIDTH // 2 - 320, 350))
     pygame.display.flip()
 
+def draw_subject_selection():
+    screen.fill((240, 240, 255))
+    text = FONT.render("Выберите предмет:", True, (0, 0, 0))
+    subjects = ["ЦГ", "Дискра", "Лианал"]
+    screen.blit(text, (WIDTH // 2 - 100, 150))
+    for i, subj in enumerate(subjects):
+        pygame.draw.rect(screen, (200, 200, 255), (WIDTH // 2 - 100, 220 + i * 60, 200, 40))
+        screen.blit(FONT.render(f"{i+1}) {subj}", True, (0, 0, 0)), (WIDTH // 2 - 80, 230 + i * 60))
+    pygame.display.flip()
+
 
 level = Level(screen, WIDTH, HEIGHT)
 if __name__ == "__main__":
