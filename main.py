@@ -98,6 +98,27 @@ class Player:
         self.on_ground = False
         self.lives = 3
 
+    def draw_bus(self):
+        # Корпус
+        pygame.draw.rect(self.image, (255, 215, 0), (0, 0, 60, 30), border_radius=5)
+        # Окна
+        pygame.draw.rect(self.image, (173, 216, 230), (10, 5, 15, 10))
+        pygame.draw.rect(self.image, (173, 216, 230), (35, 5, 15, 10))
+        # Колёса
+        pygame.draw.circle(self.image, (0, 0, 0), (15, 28), 6)
+        pygame.draw.circle(self.image, (0, 0, 0), (45, 28), 6)
+
+    def handle_input(self, keys):
+        if keys[pygame.K_LEFT]:
+            self.rect.x -= 5
+        if keys[pygame.K_RIGHT]:
+            self.rect.x += 5
+        if keys[pygame.K_SPACE] and self.on_ground:
+            self.vel_y = -15
+            self.on_ground = False
+            if self.jump_sound:
+                self.jump_sound.play()
+
 level = Level(screen, WIDTH, HEIGHT)
 if __name__ == "__main__":
     main()
