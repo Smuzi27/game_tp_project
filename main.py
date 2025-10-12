@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+#пупупу
 
 pygame.init()
 
