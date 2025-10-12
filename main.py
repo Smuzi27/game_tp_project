@@ -120,6 +120,22 @@ def draw_menu(selected_tab):
         screen.blit(text, (WIDTH // 2 - 100, 260 + i * 60))
     pygame.display.flip()
 
+def draw_developers():
+    screen.fill((240, 240, 255))
+    title = FONT.render("О разработчиках", True, (0, 0, 0))
+    devs = [
+        "Гребенник Артур",
+        "Денисов Сергей",
+        "Таранова Виталина",
+         "Егоров Даниил",
+        "Маркелов Матвей"
+    ]
+    screen.blit(title, (WIDTH // 2 - 120, 100))
+    for i, d in enumerate(devs):
+        screen.blit(FONT.render(d, True, (0, 0, 0)), (WIDTH // 2 - 120, 200 + i * 40))
+    screen.blit(FONT.render("Нажмите ESC, чтобы вернуться", True, (80, 80, 80)), (WIDTH // 2 - 200, 400))
+    pygame.display.flip()
+
 level = Level(screen, WIDTH, HEIGHT)
 if __name__ == "__main__":
     main()
