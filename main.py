@@ -136,6 +136,18 @@ def draw_developers():
     screen.blit(FONT.render("Нажмите ESC, чтобы вернуться", True, (80, 80, 80)), (WIDTH // 2 - 200, 400))
     pygame.display.flip()
 
+def draw_victory_screen(player):
+    screen.fill((200, 255, 200))
+    text = FONT.render("ПОБЕДА!", True, (0, 100, 0))
+    msg = FONT.render("Вы успешно дошли до Вышки и сдали тест!", True, (0, 0, 0))
+    screen.blit(text, (WIDTH // 2 - 80, 200))
+    screen.blit(msg, (WIDTH // 2 - 280, 260))
+    screen.blit(FONT.render("Нажмите Enter, чтобы вернуться в меню", True, (0, 0, 0)), (WIDTH // 2 - 300, 350))
+    pygame.display.flip()
+
+    if player.victory_sound:
+        player.victory_sound.play()
+
 level = Level(screen, WIDTH, HEIGHT)
 if __name__ == "__main__":
     main()
