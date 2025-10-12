@@ -89,6 +89,45 @@ class Level:
         text = font.render("ВУЗ", True, (0, 0, 0))
         self.screen.blit(text, (finish_rect.x + 20, finish_rect.y + 40))
 
+class Player:
+    def __init__(self, x, y):
+        self.image = pygame.Surface((60, 30), pygame.SRCALPHA)
+        self.draw_bus()
+        self.rect = self.image.get_rect(topleft=(x, y))
+        self.vel_y = 0
+        self.on_ground = False
+        self.lives = 3
+        # Звуки (наличие звуковых файлов)
+        try:
+            self.jump_sound = pygame.mixer.Sound("assets/jump.wav")
+            self.hit_sound = pygame.mixer.Sound("assets/hit.wav")
+            self.victory_sound = pygame.mixer.Sound("assets/win.wav")
+        except:
+            self.jump_sound = None
+            self.hit_sound = None
+            self.victory_sound = None
+
+    def draw_bus(self):
+        # Корпус
+        pygame.draw.rect(self.image, (255, 215, 0), (0, 0, 60, 30), border_radius=5)
+        # Окна
+        pygame.draw.rect(self.image, (173, 216, 230), (10, 5, 15, 10))
+        pygame.draw.rect(self.image, (173, 216, 230), (35, 5, 15, 10))
+        # Колёса
+        pygame.draw.circle(self.image, (0, 0, 0), (15, 28), 6)
+        pygame.draw.circle(self.image, (0, 0, 0), (45, 28), 6)
+
+    def handle_input(self, keys):
+        if keys[pygame.K_LEFT]:
+            self.rect.x -= 5
+        if keys[pygame.K_RIGHT]:
+            self.rect.x += 5
+        if keys[pygame.K_SPACE] and self.on_ground:
+            self.vel_y = -15
+            self.on_ground = False
+            if self.jump_sound:
+                self.jump_sound.play()
+
 SUBJECT_QUESTIONS = {
     "ЦГ": [
         ("Вы увидели в социальной сети шокирующее видео с громким заголовком, которое быстро набирает популярность. Что следует сделать в первую очередь, чтобы проверить достоверность этой информации?", ["Найти первоисточник видео, проверить его на независимых новостных сайтах и в факт-чекинговых сервисах", "Сразу поделиться видео у себя на странице, чтобы предупредить друзей", "Поверить информации, так как видео набрало много просмотров и комментариев"], 1),
@@ -193,27 +232,9 @@ def run_test(subject):
                         break
     return correct >= len(questions) / 2
 
-    def draw_bus(self):
-        # Корпус
-        pygame.draw.rect(self.image, (255, 215, 0), (0, 0, 60, 30), border_radius=5)
-        # Окна
-        pygame.draw.rect(self.image, (173, 216, 230), (10, 5, 15, 10))
-        pygame.draw.rect(self.image, (173, 216, 230), (35, 5, 15, 10))
-        # Колёса
-        pygame.draw.circle(self.image, (0, 0, 0), (15, 28), 6)
-        pygame.draw.circle(self.image, (0, 0, 0), (45, 28), 6)
 
-    def handle_input(self, keys):
-        if keys[pygame.K_LEFT]:
-            self.rect.x -= 5
-        if keys[pygame.K_RIGHT]:
-            self.rect.x += 5
-        if keys[pygame.K_SPACE] and self.on_ground:
-            self.vel_y = -15
-            self.on_ground = False
-            if self.jump_sound:
-                self.jump_sound.play()
 
 level = Level(screen, WIDTH, HEIGHT)
 if __name__ == "__main__":
     main()
+
