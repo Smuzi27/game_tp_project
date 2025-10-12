@@ -89,8 +89,16 @@ class Level:
         text = font.render("ВУЗ", True, (0, 0, 0))
         self.screen.blit(text, (finish_rect.x + 20, finish_rect.y + 40))
 
-
+class Player:
+    def __init__(self, x, y):
+        self.image = pygame.Surface((60, 30), pygame.SRCALPHA)
+        self.draw_bus()
+        self.rect = self.image.get_rect(topleft=(x, y))
+        self.vel_y = 0
+        self.on_ground = False
+        self.lives = 3
 
 level = Level(screen, WIDTH, HEIGHT)
 if __name__ == "__main__":
     main()
+
