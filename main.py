@@ -3,7 +3,7 @@ import sys
 
 pygame.init()
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 2000, 600 #времено, чтобы видеть уровень
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Маршрутка к вузу")
 
