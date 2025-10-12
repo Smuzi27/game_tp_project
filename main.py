@@ -27,10 +27,10 @@ class Level:
             pygame.Rect(1200, height - 180, 150, 20),
             pygame.Rect(1600, height - 220, 200, 20),
         ]
+
         self.finish = pygame.Rect(self.world_width - 150, height - 220, 80, 120)
         self.camera_x = 0
 
-        # Декор
         self.clouds = [[random.randint(0, self.world_width),
                         random.randint(50, 200),
                         random.uniform(0.3, 0.8)] for _ in range(6)]
@@ -51,9 +51,16 @@ class Level:
             self.emblem = None
 
 
-    def draw_background(self):
+    def update(self):
+        # Движение облаков (лево → право, зацикливается)
+        for cloud in self.clouds:
+            cloud[0] += cloud[2]
+            if cloud[0] - self.camera_x > self.world_width + 200:
+                cloud[0] = -200
+
+    def draw_background(self, screen):
         # Облака
-        for x, y in self.clouds:
+        for x, y, _ in self.clouds:
             pygame.draw.ellipse(screen, (255, 255, 255), (x - self.camera_x, y, 120, 60))
         # Деревья
         for x, y in self.trees:
@@ -62,13 +69,10 @@ class Level:
 
     def draw(self, screen):
         self.draw_background(screen)
-        # Платформы
         for platform in self.platforms:
             pygame.draw.rect(screen, (80, 80, 80), platform.move(-self.camera_x, 0))
-        # Препятствия
         for obs in self.obstacles:
             pygame.draw.rect(screen, (200, 50, 50), obs.move(-self.camera_x, 0))
-        # Здание ВУЗа
         finish_rect = self.finish.move(-self.camera_x, 0)
         pygame.draw.rect(screen, (200, 180, 255), finish_rect)
         pygame.draw.rect(screen, (100, 0, 150), finish_rect, 3)
@@ -103,8 +107,8 @@ class Player:
         pygame.draw.rect(self.image, (173, 216, 230), (10, 5, 15, 10))
         pygame.draw.rect(self.image, (173, 216, 230), (35, 5, 15, 10))
         # Колёса
-        pygame.draw.circle(self.image, (0, 0, 0), (15, 28), 6)
-        pygame.draw.circle(self.image, (0, 0, 0), (45, 28), 6)
+        pygame.draw.circle(self.image, (0, 0, 0), (15, 28), 8)
+        pygame.draw.circle(self.image, (0, 0, 0), (45, 28), 8)
 
     def handle_input(self, keys):
         if keys[pygame.K_LEFT]:
@@ -116,6 +120,36 @@ class Player:
             self.on_ground = False
             if self.jump_sound:
                 self.jump_sound.play()
+
+    def apply_gravity(self):
+        self.vel_y += 0.8
+        if self.vel_y > 12:
+            self.vel_y = 12
+        self.rect.y += self.vel_y
+        if self.rect.bottom >= HEIGHT - 100:
+            self.rect.bottom = HEIGHT - 100
+            self.vel_y = 0
+            self.on_ground = True
+
+    def check_collision(self, platforms, obstacles):
+        for platform in platforms:
+            if self.rect.colliderect(platform):
+                if self.vel_y > 0 and self.rect.bottom <= platform.bottom:
+                    self.rect.bottom = platform.top
+                    self.vel_y = 0
+                    self.on_ground = True
+        for obs in obstacles:
+            if self.rect.colliderect(obs):
+                self.rect.x -= 50
+                self.lives -= 1
+                if self.hit_sound:
+                    self.hit_sound.play()
+                if self.lives < 0:
+                    self.lives = 0
+
+    def draw(self, screen, camera_x):
+        screen.blit(self.image, (self.rect.x - camera_x, self.rect.y))
+
 
 
 SUBJECT_QUESTIONS = {
