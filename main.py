@@ -5,43 +5,63 @@ import random
 
 pygame.init()
 
-WIDTH, HEIGHT = 2000, 600 #времено, чтобы видеть уровень
+WIDTH, HEIGHT = 1000, 600 #времено, чтобы видеть уровень
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Маршрутка к вузу")
+pygame.display.set_caption("Маршрутка в Вышку")
 
 SKY_BLUE = (135, 206, 235)
 ROAD_GRAY = (50, 50, 50)
 
-clock = pygame.time.Clock()
+FONT = pygame.font.Font(None, 36)
 
 
 def main():
-    running = True
-    player_x = 0 #удалить потом
+    level = Level(WIDTH, HEIGHT)
+    player = Player(50, HEIGHT - 150)
+    state = "menu"
+    selected_tab = 0
+    subject = None
+    victory = False
 
-    while running:
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                sys.exit()
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_RIGHT]:
-            player_x += 5
-        if keys[pygame.K_LEFT]:
-            player_x -= 5
+            # Меню
+            if state == "menu":
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        selected_tab = (selected_tab - 1) % 3
+                    elif event.key == pygame.K_DOWN:
+                        selected_tab = (selected_tab + 1) % 3
+                    elif event.key == pygame.K_RETURN:
+                        if selected_tab == 0:
+                            state = "game"
+                        elif selected_tab == 1:
+                            state = "about"
+                        elif selected_tab == 2:
+                            pygame.quit()
+                            sys.exit()
 
-        # Камера следует за игроком
-        level.camera_x = max(0, min(player_x - WIDTH // 2, level.world_width - WIDTH))
+            elif state == "about":
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    state = "menu"
 
-        screen.fill(SKY_BLUE)
-        pygame.draw.rect(screen, ROAD_GRAY, (0, HEIGHT - 100, WIDTH, 100))
-        level.draw()
+            elif state == "subject_select":
+                if event.type == pygame.KEYDOWN:
+                    if event.key in [pygame.K_1, pygame.K_2, pygame.K_3]:
+                        subject = ["ЦГ", "Дискра", "Линал"][int(event.unicode) - 1]
+                        victory = run_test(subject)
+                        state = "victory" if victory else "game_over"
 
-        pygame.display.flip()
-        clock.tick(60)
+            elif state in ["victory", "game_over"]:
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    state = "menu"
+                    player = Player(50, HEIGHT - 150)
+                    level = Level(WIDTH, HEIGHT)
 
-    pygame.quit()
-    sys.exit()
 
 
 class Level:
