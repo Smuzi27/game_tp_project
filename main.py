@@ -97,6 +97,15 @@ class Player:
         self.vel_y = 0
         self.on_ground = False
         self.lives = 3
+        # Звуки (наличие звуковых файлов)
+        try:
+            self.jump_sound = pygame.mixer.Sound("assets/jump.wav")
+            self.hit_sound = pygame.mixer.Sound("assets/hit.wav")
+            self.victory_sound = pygame.mixer.Sound("assets/win.wav")
+        except:
+            self.jump_sound = None
+            self.hit_sound = None
+            self.victory_sound = None
 
     def draw_bus(self):
         # Корпус
