@@ -107,6 +107,19 @@ SUBJECT_QUESTIONS = {
     ]
 }
 
+def draw_menu(selected_tab):
+    screen.fill(color_sky)
+    title = FONT.render("Маршрутка до Вышки", True, (0, 0, 0))
+    screen.blit(title, (WIDTH // 2 - 140, 150))
+
+    options = ["Начать игру", "О разработчиках", "Выход"]
+    for i, opt in enumerate(options):
+        color = (255, 255, 255) if i == selected_tab else (220, 220, 220)
+        pygame.draw.rect(screen, color, (WIDTH // 2 - 120, 250 + i * 60, 240, 40))
+        text = FONT.render(opt, True, (0, 0, 0))
+        screen.blit(text, (WIDTH // 2 - 100, 260 + i * 60))
+    pygame.display.flip()
+
 level = Level(screen, WIDTH, HEIGHT)
 if __name__ == "__main__":
     main()
