@@ -168,6 +168,31 @@ def draw_subject_selection():
     pygame.display.flip()
 
 
+def run_test(subject):
+    questions = SUBJECT_QUESTIONS[subject]
+    correct = 0
+    for q, options, answer in questions:
+        asking = True
+        while asking:
+            screen.fill((255, 255, 240))
+            screen.blit(FONT.render(q, True, (0, 0, 0)), (50, 150))
+            for i, opt in enumerate(options):
+                screen.blit(FONT.render(f"{i+1}) {opt}", True, (0, 0, 0)), (80, 220 + i * 40))
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key in [pygame.K_1, pygame.K_2, pygame.K_3]:
+                        chosen = int(event.unicode) - 1
+                        if chosen == answer:
+                            correct += 1
+                        asking = False
+                        break
+    return correct >= len(questions) / 2
+
 level = Level(screen, WIDTH, HEIGHT)
 if __name__ == "__main__":
     main()
