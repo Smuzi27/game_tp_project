@@ -87,50 +87,7 @@ class Level:
         font = pygame.font.Font(None, 24)
         text = font.render("ВУЗ", True, (0, 0, 0))
         self.screen.blit(text, (finish_rect.x + 20, finish_rect.y + 40))
-class Level:
-    def __init__(self, screen, width, height):
-        self.screen = screen
-        self.width = width
-        self.height = height
-        self.world_width = 2000
-        self.platforms = [
-            pygame.Rect(200, height - 150, 100, 20),
-            pygame.Rect(500, height - 250, 150, 20),
-            pygame.Rect(800, height - 200, 120, 20),
-            pygame.Rect(1200, height - 180, 150, 20),
-            pygame.Rect(1600, height - 220, 200, 20),
-        ]
-        self.finish = pygame.Rect(self.world_width - 150, height - 220, 80, 120)
-        self.camera_x = 0
 
-        # Декор
-        self.clouds = [(random.randint(0, self.world_width), random.randint(50, 200)) for _ in range(8)]
-        self.trees = [(120 * i, height - 150) for i in range(16)]
-
-    def draw_background(self):
-        # Облака
-        for x, y in self.clouds:
-            pygame.draw.ellipse(self.screen, (255, 255, 255), (x - self.camera_x, y, 120, 60))
-        # Деревья
-        for x, y in self.trees:
-            pygame.draw.rect(self.screen, (101, 67, 33), (x - self.camera_x, y, 20, 60))
-            pygame.draw.circle(self.screen, (34, 139, 34), (x - self.camera_x + 10, y), 30)
-
-    def draw(self):
-        self.draw_background()
-
-        # Платформы
-        for platform in self.platforms:
-            rect = platform.move(-self.camera_x, 0)
-            pygame.draw.rect(self.screen, (80, 80, 80), rect)
-
-        # Здание вуза
-        finish_rect = self.finish.move(-self.camera_x, 0)
-        pygame.draw.rect(self.screen, (200, 180, 255), finish_rect)
-        pygame.draw.rect(self.screen, (100, 0, 150), finish_rect, 3)
-        font = pygame.font.Font(None, 24)
-        text = font.render("ВУЗ", True, (0, 0, 0))
-        self.screen.blit(text, (finish_rect.x + 20, finish_rect.y + 40))
 
 
 level = Level(screen, WIDTH, HEIGHT)
